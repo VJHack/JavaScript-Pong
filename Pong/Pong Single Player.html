@@ -1,0 +1,139 @@
+<html>
+<H1><B>Score:</B></H1>
+<canvas id="gameCanvas" width="800" height="575">
+</canvas>
+
+<script>
+	var canvas;
+	var canvasContent;
+	var ballX = 50;
+	var ballY = 50;
+	var ballSpeedX = 10;
+	var ballSpeedY = 4;
+	
+	var paddle1Y = 250;
+	var paddle2Y = 250;
+	const PADDLE_HEIGHT = 100;
+function calculateMousePos(evt) {
+	var rect = canvas.getBoundingClientRect();
+	var root = document.documentElement;
+	var mouseX = evt.clientX - rect.left - root.scrollLeft;
+	var mouseY = evt.clientY - rect.top - root.scrollTop;
+	return {
+		x:mouseX,
+		y:mouseY
+	};
+}
+
+	
+window.onload = function(){
+
+	canvas = document.getElementById('gameCanvas');
+	canvasContext = canvas.getContext('2d');
+	
+var framesPerSecond = 30;
+setInterval(function(){
+		move();
+		draw();
+		//artificialIntelligence();
+		}, 1000/framesPerSecond);
+	
+	canvas.addEventListener('mousemove',
+		function(evt) {
+			var mousePos = calculateMousePos(evt);
+			paddle1Y = mousePos.y - (PADDLE_HEIGHT/2);
+		});
+}
+
+
+function move(){
+	ballX = ballX + ballSpeedX;
+	ballY = ballY + ballSpeedY;
+	paddle2Y = ballY  - (PADDLE_HEIGHT/2);
+	
+	if(ballX > canvas.width){
+	ballReset();
+	}
+	if(ballX < 35){
+	if(ballY > paddle1Y && 
+	   ballY < paddle1Y + PADDLE_HEIGHT){
+	   ballSpeedX = -ballSpeedX;
+	   } 
+	if(ballX < 0){
+	ballReset();
+	}
+	}
+	if(ballY > canvas.height){
+	ballSpeedY = -ballSpeedY;
+	}
+	if(ballY < 0){
+	ballSpeedY = -ballSpeedY;
+	} 
+	if(ballX > 760){
+	if(ballY > paddle2Y && 
+	   ballY < paddle2Y + PADDLE_HEIGHT){
+	   ballSpeedX = -ballSpeedX;
+	   } /*else{
+	ballReset();
+	}	*/
+	}
+
+}	
+
+
+function draw(){
+	//Next line blanks out the canvas with black
+	colorRect(0,0,canvas.width,canvas.height,'Black');
+	
+	//This is Left player paddle
+	colorRect(10,paddle1Y,20,PADDLE_HEIGHT,'White');	
+	
+	//This is right player paddle
+	colorRect(770,paddle2Y,20,100,'White');
+	
+	//This is game ball
+	colorCircle(ballX, ballY, 10,'white'); 	
+	
+	colorRect(canvas.width/2, 30, 3, 50);
+	
+	colorRect(canvas.width/2, 100, 3, 50);
+
+	colorRect(canvas.width/2, 170, 3, 50);
+
+	colorRect(canvas.width/2, 240, 3, 50);
+	
+	colorRect(canvas.width/2, 310, 3, 50);
+	
+	colorRect(canvas.width/2, 380, 3, 50);
+	
+	colorRect(canvas.width/2, 450, 3, 50);
+
+	colorRect(canvas.width/2, 520, 3, 50);
+	
+	
+}
+
+function ballReset(){
+	ballX = canvas.width/2
+	ballY = canvas.height/2
+}
+function colorCircle(centerX,centerY,radius, drawColor){
+	canvasContext.fillStyle = drawColor;
+	canvasContext.beginPath();
+	canvasContext.arc(centerX, centerY, radius, 0, Math.PI*2, true);
+	canvasContext.fill();
+	
+}
+// This next function just shows the format for how the draw fuction above should work
+function colorRect(leftX, topY, width, height, drawColor){
+	canvasContext.fillStyle = drawColor;
+	canvasContext.fillRect(leftX,topY,width,height);
+}	
+
+//function artificialIntelligence(){
+	//paddle2Y = ballY 
+	//}
+		
+</script>
+
+</html>	
